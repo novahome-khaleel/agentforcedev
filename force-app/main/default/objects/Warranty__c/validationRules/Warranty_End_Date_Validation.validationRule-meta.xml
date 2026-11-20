@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_End_Date_Validation</fullName>
+    <active>true</active>
+    <description>Warranty End Date cannot be earlier than Warranty Start Date.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Warranty_Start_Date__c)),
+    NOT(ISBLANK(Warranty_End_Date__c)),
+    Warranty_End_Date__c &lt; Warranty_Start_Date__c
+)</errorConditionFormula>
+    <errorMessage>Warranty End Date cannot be earlier than Warranty Start Date.</errorMessage>
+</ValidationRule>

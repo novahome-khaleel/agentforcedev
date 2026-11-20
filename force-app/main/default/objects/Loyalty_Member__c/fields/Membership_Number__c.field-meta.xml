@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Membership_Number__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>Stores the unique loyalty membership number assigned to the customer. Used by Agentforce to locate and distinguish a specific loyalty member.</description>
+    <externalId>false</externalId>
+    <label>Membership Number</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_End_Date__c</fullName>
+    <description>Indicates the date on which the product warranty coverage expires. Used by Agentforce to determine whether a product is within its warranty period.</description>
+    <label>Warranty End Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

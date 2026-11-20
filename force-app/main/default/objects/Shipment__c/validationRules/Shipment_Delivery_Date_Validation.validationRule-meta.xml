@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Shipment_Delivery_Date_Validation</fullName>
+    <active>true</active>
+    <description>Delivered Date cannot be earlier than Shipment Date.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Delivered_Date__c)),
+    NOT(ISBLANK(Shipment_Date__c)),
+    Delivered_Date__c &lt; Shipment_Date__c
+)</errorConditionFormula>
+    <errorMessage>Delivered Date cannot be earlier than Shipment Date.</errorMessage>
+</ValidationRule>
