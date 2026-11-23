@@ -1,0 +1,36 @@
+
+# Day 7 – Agentforce Architecture
+
+## Objective
+Understand agents, subagents, actions, instructions,
+variables, channels and Atlas reasoning.
+
+## Implementation
+- Agent: NovaHome FAQ Agent
+- Org: AgentforceDev
+- Subagent: Store Hours
+- Flow: NovaHome_Get_Store_Hours
+- Flow action: Get_NovaHome_Store_Hours
+- Input: CustomerQuestion (Text)
+- Output: StoreHours (Text)
+
+## Flow Schedule
+Monday to Saturday: 9:00 AM – 6:00 PM
+Sunday: Closed
+
+## Architecture
+Customer → Agent Router → Store Hours
+→ Flow Action → StoreHours Output → Response
+
+## Test Results
+Record five Preview tests and their selected
+subagent, action, output and result.
+
+## Evidence
+- Store Hours subagent configuration
+- Flow configuration
+- Agent action configuration
+- Successful Preview execution trace
+
+## Learning
+Plan → Act → Observe → Respond
