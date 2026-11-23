@@ -1,0 +1,48 @@
+
+# Day 8 – The New Agentforce Builder
+
+## Learning objectives
+- Agentforce Assistant
+- Canvas vs Script view
+- Agent versioning and Commit
+- Preview and execution traces
+
+## Agent
+- Name: NovaHome FAQ Agent
+- Developer Name: NovaHome_FAQ_Agent
+
+## Version 1
+Original agent instructions.
+
+## Version 2
+Added the following instruction:
+
+"For store-hours questions, always use the Store Hours
+subagent and its configured Flow action to retrieve the
+schedule. Never guess or invent operating hours."
+
+## Preview Comparison
+
+Test question:
+What are NovaHome's store opening hours?
+
+| Check | Version 1 | Version 2 |
+|---|---|---|
+| Store Hours subagent | Passed | Passed |
+| Flow action | Passed | Passed |
+| Correct schedule | Passed | Passed |
+| Output evaluation | GROUNDED | GROUNDED |
+
+## Difference
+Version 1 uses the original instructions.
+Version 2 explicitly requires Store Hours questions
+to use the Store Hours subagent and Flow action.
+
+Both versions returned the correct grounded response.
+No behavioral difference was observed in this test.
+
+## Evidence
+- Version 1 Preview screenshot
+- Version 2 Preview screenshot
+- Version 2 Script view screenshot
+- Version 2 committed screenshot
