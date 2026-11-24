@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>68.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Sets a safe response when the supplied customer email does not match a Loyalty Member record.</description>
+        <name>Set_Customer_Not_Found_Message</name>
+        <label>Set Customer Not Found Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ResponseMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>We couldn&apos;t verify your customer details. Please check your email address and try again.</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>END_ELEMENT_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets a customer-facing message when no shipment matches the supplied tracking number and verified customer.</description>
+        <name>Set_Shipment_Not_Found_Message</name>
+        <label>Set Shipment Not Found Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ResponseMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>We couldn&apos;t find a shipment matching that tracking number for your account. Please verify the tracking number and try again.</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>END_ELEMENT_1</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Maps the matching shipment&apos;s status and estimated delivery date to Flow output variables and prepares a customer-facing success response.</description>
+        <name>Set_Shipment_Response</name>
+        <label>Set Shipment Response</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ShipmentStatus</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Shipment.Shipment_Status__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>EstimatedDeliveryDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Shipment.Estimated_Delivery_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ResponseMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ShipmentResponseFormula</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>END_ELEMENT_1</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Checks whether the supplied customer email matches an existing Loyalty Member before retrieving shipment information.</description>
+        <name>Customer_Found</name>
+        <label>Customer Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Customer_Not_Found_Message</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Customer Not Found</defaultConnectorLabel>
+        <rules>
+            <name>Customer_Found_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Customer.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Shipment</targetReference>
+            </connector>
+            <label>Customer Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checks whether a shipment exists for the supplied tracking number and verified customer.</description>
+        <name>Shipment_Found</name>
+        <label>Shipment Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Shipment_Not_Found_Message</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Shipment Not Found</defaultConnectorLabel>
+        <rules>
+            <name>Shipment_Found_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Shipment.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Shipment_Response</targetReference>
+            </connector>
+            <label>Shipment Found</label>
+        </rules>
+    </decisions>
+    <description>Retrieves a customer&apos;s shipment status and estimated delivery date using the tracking number and verified customer email.</description>
+    <ends>
+        <name>END_ELEMENT_1</name>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+    </ends>
+    <environments>Default</environments>
+    <formulas>
+        <description>Builds the customer-facing shipment status response using the retrieved shipment status and estimated delivery date.</description>
+        <name>ShipmentResponseFormula</name>
+        <dataType>String</dataType>
+        <expression>&quot;Your shipment status is &quot; &amp;
+TEXT({!Get_Shipment.Shipment_Status__c}) &amp;
+&quot;. Estimated delivery date: &quot; &amp;
+TEXT({!Get_Shipment.Estimated_Delivery_Date__c}) &amp;
+&quot;.&quot;</expression>
+    </formulas>
+    <interviewLabel>Get Order Status {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Order Status</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Finds the loyalty member using the customer email supplied to the Flow so shipment ownership can be verified.</description>
+        <name>Get_Customer</name>
+        <label>Get Customer</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Customer_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Email__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CustomerEmail</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Loyalty_Member__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Retrieves a shipment matching the supplied tracking number and the verified customer&apos;s Loyalty Member record.</description>
+        <name>Get_Shipment</name>
+        <label>Get Shipment</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Shipment_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Tracking_Number__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>OrderNumber</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Loyalty_Member__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Customer.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Shipment__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Customer</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Customer email used to verify the shipment belongs to the customer.</description>
+        <name>CustomerEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Estimated delivery date returned from the matching Shipment record.</description>
+        <name>EstimatedDeliveryDate</name>
+        <dataType>Date</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <description>Customer&apos;s shipment tracking number, used as the order number for this exercise.</description>
+        <name>OrderNumber</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Customer-facing message describing the shipment lookup result or why shipment information could not be retrieved.</description>
+        <name>ResponseMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <description>Shipment status returned from the matching Shipment record.</description>
+        <name>ShipmentStatus</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

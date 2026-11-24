@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>68.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Sets the StoreHours output variable with the configured NovaHome demonstration store schedule so the Agentforce agent can provide operating-hours information to customers.</description>
+        <name>Set_Store_Hours</name>
+        <label>Set Store Hours</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StoreHours</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Monday to Saturday: 9:00 AM – 6:00 PM, Sunday: Closed</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>END_ELEMENT_1</targetReference>
+        </connector>
+    </assignments>
+    <description>Retrieves NovaHome store operating hours and returns the information to the calling Agentforce action. Used by the NovaHome FAQ Agent to answer customer questions about store opening and closing times and weekly operating schedules.</description>
+    <ends>
+        <name>END_ELEMENT_1</name>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+    </ends>
+    <environments>Default</environments>
+    <interviewLabel>NovaHome Get Store Hours {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>NovaHome Get Store Hours</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Store_Hours</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Captures the customer&apos;s original question about NovaHome store operating hours and passes it into the Flow when invoked by the Agentforce Store Hours subagent. This provides context for handling the customer&apos;s request.</description>
+        <name>CustomerQuestion</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the NovaHome store operating hours as text and returns the value to the calling Agentforce action. Used to provide customers with store opening days, closing times, and weekly operating schedules.</description>
+        <name>StoreHours</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>
