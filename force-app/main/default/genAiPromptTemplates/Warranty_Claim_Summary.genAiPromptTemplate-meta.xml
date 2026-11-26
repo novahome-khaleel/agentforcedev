@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>amhoMYZQ9qal7i39f5b1LTNiAZpGrvS1pejbt1s+v+c=_1</activeVersionIdentifier>
+    <description>Generates a grounded summary of a warranty claim using warranty and customer context retrieved by Apex.</description>
+    <developerName>Warranty_Claim_Summary</developerName>
+    <masterLabel>Warranty Claim Summary</masterLabel>
+    <overridable>false</overridable>
+    <templateVersions>
+        <content>You are NovaHome&apos;s Warranty Support Assistant.
+​Generate a clear, accurate Warranty Claim Summary using the provided Warranty record and the Apex-generated warranty context.
+​Include these sections:
+​- **Warranty Details:** Warranty name, serial number, product name, warranty status, purchase date, warranty start date, and warranty end date.
+​- **Customer Details:** Customer name and available contact information.
+​- **Warranty Assessment:** Explain the current warranty status and whether the warranty appears active, expired, or otherwise restricted, based only on the supplied data.
+​- **Support Summary:** Provide a short summary of the customer&apos;s warranty situation and the next recommended support step.
+​Rules:
+​- Use only information available in the supplied resources.
+​- Do not invent missing values. Display &quot;Not Available&quot; when information is missing.
+​- If the resources contain conflicting information, clearly identify the discrepancy.
+​- Do not independently promise claim approval or replacement.
+​- Keep the response professional, concise, and easy for a support representative to understand.
+​{{RecordSnapshot.Warranty.snapshot}}
+​{{Apex.WarrantyClaimPromptContext.Prompt}}</content>
+        <fileDroppingStrategy>{&quot;dropFilesBy&quot;:&quot;LAST_MODIFIED_DATE&quot;,&quot;dropFileStartingWith&quot;:&quot;OLDEST&quot;}</fileDroppingStrategy>
+        <inputs>
+            <apiName>Warranty</apiName>
+            <definition>SOBJECT://Warranty__c</definition>
+            <description>Warranty record used as the source for claim details and customer context.</description>
+            <masterLabel>Warranty__c</masterLabel>
+            <referenceName>Input.Warranty</referenceName>
+            <required>true</required>
+        </inputs>
+        <isCitationEnabled>false</isCitationEnabled>
+        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>invocable://getDataForGrounding</definition>
+            <description>Retrieves record data for grounding a prompt template.</description>
+            <label>Record Snapshot</label>
+            <parameters>
+                <definition>primitive://String</definition>
+                <isRequired>true</isRequired>
+                <parameterName>recordId</parameterName>
+                <valueExpression>{{Input.Warranty.Id}}</valueExpression>
+            </parameters>
+            <referenceName>RecordSnapshot.Warranty</referenceName>
+        </templateDataProviders>
+        <templateDataProviders>
+            <definition>apex://WarrantyClaimPromptContext</definition>
+            <description>Retrieves warranty and related customer details to ground the Warranty Claim Summary prompt.</description>
+            <label>Get Warranty Claim Context</label>
+            <parameters>
+                <definition>SOBJECT://Warranty__c</definition>
+                <isRequired>true</isRequired>
+                <parameterName>WarrantyRecord</parameterName>
+                <valueExpression>{{Input.Warranty}}</valueExpression>
+            </parameters>
+            <referenceName>Apex.WarrantyClaimPromptContext</referenceName>
+        </templateDataProviders>
+        <templateFormat>Jinja</templateFormat>
+        <versionIdentifier>amhoMYZQ9qal7i39f5b1LTNiAZpGrvS1pejbt1s+v+c=_1</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>
